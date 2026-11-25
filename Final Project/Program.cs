@@ -10,10 +10,9 @@ namespace Final_Project
         {
             string usersPath = "users.txt";
             AnsiConsole.Write(
-    new FigletText("NUCLEAR FISSION POWER PLANT")
-        .Centered()
-        .Color(Color.Green));
-
+                new FigletText("NUCLEAR FISSION POWER PLANT")
+                    .Centered()
+                    .Color(Color.Green));
 
             List<User> defaultUsers = new List<User>()
             {
@@ -85,53 +84,56 @@ namespace Final_Project
             PlantManager manager = new PlantManager();
             bool running = true;
 
-            string choice = AnsiConsole.Prompt(
-              new SelectionPrompt<string>()
-                  .Title("\n[bold yellow]Select an option:[/]")
-                  .PageSize(10)
-                  .AddChoices(new[]
-                  {
-            "Add component",
-            "View all",
-            "Search ID",
-            "Remove component",
-            "Save file",
-            "Add note",
-            "Delete file",
-            "Exit"
-                  }));
-
-            switch (choice)
+            while (running)
             {
-                case "Add component":
-                    try { AddComponent(manager); }
-                    catch (PlantShutdownException ex) { Console.WriteLine(ex.Message); }
-                    break;
-                case "View all":
-                    manager.DisplayAllComponents();
-                    break;
-                case "Search ID":
-                    try { SearchComponent(manager); }
-                    catch (NotFoundException ex) { Console.WriteLine(ex.Message); }
-                    break;
-                case "Remove component":
-                    try { RemoveComponent(manager); }
-                    catch (PlantShutdownException ex) { Console.WriteLine(ex.Message); }
-                    catch (NotFoundException ex) { Console.WriteLine(ex.Message); }
-                    break;
-                case "Save file":
-                    manager.CreateLogFile();
-                    break;
-                case "Add note":
-                    string note = AnsiConsole.Ask<string>("Note:");
-                    manager.AppendToLogFile(note);
-                    break;
-                case "Delete file":
-                    manager.DeleteLogFile();
-                    break;
-                case "Exit":
-                    running = false;
-                    break;
+                string choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("\n[bold yellow]Select an option:[/]")
+                        .PageSize(10)
+                        .AddChoices(new[]
+                        {
+                            "Add component",
+                            "View all",
+                            "Search ID",
+                            "Remove component",
+                            "Save file",
+                            "Add note",
+                            "Delete file",
+                            "Exit"
+                        }));
+
+                switch (choice)
+                {
+                    case "Add component":
+                        try { AddComponent(manager); }
+                        catch (PlantShutdownException ex) { Console.WriteLine(ex.Message); }
+                        break;
+                    case "View all":
+                        manager.DisplayAllComponents();
+                        break;
+                    case "Search ID":
+                        try { SearchComponent(manager); }
+                        catch (NotFoundException ex) { Console.WriteLine(ex.Message); }
+                        break;
+                    case "Remove component":
+                        try { RemoveComponent(manager); }
+                        catch (PlantShutdownException ex) { Console.WriteLine(ex.Message); }
+                        catch (NotFoundException ex) { Console.WriteLine(ex.Message); }
+                        break;
+                    case "Save file":
+                        manager.CreateLogFile();
+                        break;
+                    case "Add note":
+                        string note = AnsiConsole.Ask<string>("Note:");
+                        manager.AppendToLogFile(note);
+                        break;
+                    case "Delete file":
+                        manager.DeleteLogFile();
+                        break;
+                    case "Exit":
+                        running = false;
+                        break;
+                }
             }
         }
 
@@ -200,6 +202,7 @@ namespace Final_Project
                 Console.WriteLine("Invalid type choice.");
             }
         }
+
         private static void SearchComponent(PlantManager manager)
         {
             Console.Write("Component ID (in order of creation, starting from COMP-1): ");
@@ -208,6 +211,7 @@ namespace Final_Project
             PlantComponent item = manager.SearchComponentById(id);
             Console.WriteLine(item.GetDetails());
         }
+
         private static void RemoveComponent(PlantManager manager)
         {
             Console.Write("Component ID to remove (in order of creation, starting from COMP-1): ");
@@ -217,4 +221,3 @@ namespace Final_Project
         }
     }
 }
-//The note from the notable noters note
