@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Final_Project.Models
+﻿namespace Final_Project.Models
 {
     public class ReactorCore : PlantComponent
     {
-        // Erti Random generatori yvela reaqtoristvis, shemtkhvevit ricxvebis sagenerirebelad
+        // erti Random generatori yvela reaqtoristvis, shemtkhvevit ricxvebis sagenerirebelad
         private static Random _random = new Random();
 
         public double Temperature { get; set; }

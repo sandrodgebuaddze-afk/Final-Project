@@ -1,7 +1,4 @@
 ﻿using Final_Project.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Final_Project.Models
 {
@@ -13,8 +10,6 @@ namespace Final_Project.Models
         private string _name;
 
         public string Id => _id;
-
-        // tu saxeli carielia chaiceroba Unknown
         public string Name
         {
             get => _name;

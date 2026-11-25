@@ -1,8 +1,6 @@
 ﻿using Final_Project.Enums;
 using Final_Project.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using Spectre.Console;
 
 namespace Final_Project.Models
 {
@@ -17,8 +15,6 @@ namespace Final_Project.Models
         public bool IsPlantShutDown { get; private set; } = false;
 
         public string ShutdownReason { get; private set; } = string.Empty;
-
-        // Amatebs komponents sias da shemdeg amocmebs usafrtkhoebas
 
         public void AddComponent(PlantComponent component)
         {
@@ -48,20 +44,45 @@ namespace Final_Project.Models
         {
             if (_components.Count == 0)
             {
-                Console.WriteLine("No components in the system.");
+                AnsiConsole.MarkupLine("[yellow]No components in the system.[/]");
                 return;
             }
 
+            var table = new Table()
+                .Border(TableBorder.Rounded)
+                .AddColumn("ID")
+                .AddColumn("Name")
+                .AddColumn("Type")
+                .AddColumn("Status")
+                .AddColumn("Details");
+
             foreach (var comp in _components)
             {
-                Console.WriteLine(comp.GetDetails());
+                string statusText = comp.Status == ComponentStatus.Shutdown
+                    ? "[red]Shutdown[/]"
+                    : $"[green]{comp.Status}[/]";
+
+                table.AddRow(
+                    comp.Id,
+                    comp.Name,
+                    comp.GetType().Name,
+                    statusText,
+                    comp.GetDetails()
+                );
             }
 
-            foreach (string note in Notes)
+            AnsiConsole.Write(table);
+
+            if (Notes.Length > 0)
             {
-                Console.WriteLine($"Note: {note}");
+                AnsiConsole.MarkupLine("\n[bold]Notes:[/]");
+                foreach (string note in Notes)
+                {
+                    AnsiConsole.MarkupLine($"• {note}");
+                }
             }
         }
+
 
         public PlantComponent SearchComponentById(string id)
         {
@@ -90,8 +111,6 @@ namespace Final_Project.Models
                 }
             }
         }
-	// amocmebs yvela komponents usafrtkhoebis zghvrebze da avariulad tishavs mtlian sadgurs tu problema agmochnda.
-
         private void TriggerEmergencyShutdown(string reason)
         {
             IsPlantShutDown = true;
@@ -129,7 +148,7 @@ namespace Final_Project.Models
                 Console.WriteLine($"Error writing file: {ex.Message}");
             }
         }
-        // Amatebs drois nishnulian chanawers log.txt failshi tu arsebobs da ganaxlebs Notes masivs mexsierebashi.
+
         public void AppendToLogFile(string note)
         {
             if (!File.Exists(logPath))

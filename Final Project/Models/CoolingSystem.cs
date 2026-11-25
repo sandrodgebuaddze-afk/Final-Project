@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Final_Project.Models
+﻿namespace Final_Project.Models
 {
 
     public class CoolingSystem : PlantComponent
@@ -14,14 +10,10 @@ namespace Final_Project.Models
         {
             Pressure = pressure;
         }
-
-        // ematebs wnevas da usafrtkhoo zonas
         public override string GetDetails()
         {
             return $"{base.GetDetails()} | System Pressure: {Pressure} bar (Safe Zone: 140.0-170.0 bar)";
         }
-
-        // tu wneva 140 ze nakleabia an 170 ze metia abrunebs problemas, sxva shemtkhvevashi null
         public override string GetSafetyProblem()
         {
             if (Pressure < 140.0 || Pressure > 170.0)
