@@ -1,0 +1,41 @@
+﻿using Final_Project.Enums;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Final_Project.Models
+{
+    public abstract class PlantComponent
+    {
+        // es ricxvi qmnis ID ebs, erti aris yvela komponentistvis, 100 dan iwyeba
+        private static int _globalIdCounter = 1;
+        private string _id;
+        private string _name;
+
+        public string Id => _id;
+
+        // tu saxeli carielia chaiceroba Unknown
+        public string Name
+        {
+            get => _name;
+            set => _name = string.IsNullOrWhiteSpace(value) ? "Unknown" : value;
+        }
+
+        public ComponentStatus Status { get; set; } = ComponentStatus.Operational;
+
+        protected PlantComponent(string name)
+        {
+            _globalIdCounter++;
+            _id = $"COMP-{_globalIdCounter}";
+            Name = name;
+        }
+
+        public virtual string GetDetails()
+        {
+            return $"ID: {Id} | Name: {Name} | Status: {Status}";
+        }
+
+        // amowmebs aris tu ara komponenti usafrtxoa
+        public abstract string GetSafetyProblem();
+    }
+}
