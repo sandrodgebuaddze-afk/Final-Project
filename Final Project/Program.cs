@@ -1,6 +1,6 @@
-﻿using System;
-using Final_Project.Exceptions;
+﻿using Final_Project.Exceptions;
 using Final_Project.Models;
+using Spectre.Console;
 
 namespace Final_Project
 {
@@ -80,81 +80,56 @@ namespace Final_Project
             PlantManager manager = new PlantManager();
             bool running = true;
 
-            while (running)
+            string choice = AnsiConsole.Prompt(
+              new SelectionPrompt<string>()
+                  .Title("\n[bold yellow]Select an option:[/]")
+                  .PageSize(10)
+                  .AddChoices(new[]
+                  {
+            "Add component",
+            "View all",
+            "Search ID",
+            "Remove component",
+            "Save file",
+            "Add note",
+            "Delete file",
+            "Exit"
+                  }));
+
+            switch (choice)
             {
-                Console.WriteLine("1. Add component");
-                Console.WriteLine("2. View all");
-                Console.WriteLine("3. Search ID");
-                Console.WriteLine("4. Remove component");
-                Console.WriteLine("5. Save file");
-                Console.WriteLine("6. Add note");
-                Console.WriteLine("7. Delete file");
-                Console.WriteLine("8. Exit");
-                Console.Write("Option: ");
-
-                string choice = Console.ReadLine();
-
-                switch (choice)
-                {
-                    case "1":
-                        try
-                        {
-                            AddComponent(manager);
-                        }
-                        catch (PlantShutdownException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        break;
-                    case "2":
-                        manager.DisplayAllComponents();
-                        break;
-                    case "3":
-                        try
-                        {
-                            SearchComponent(manager);
-                        }
-                        catch (NotFoundException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        break;
-                    case "4":
-                        try
-                        {
-                            RemoveComponent(manager);
-                        }
-                        catch (PlantShutdownException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        catch (NotFoundException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        break;
-                    case "5":
-                        manager.CreateLogFile();
-                        break;
-                    case "6":
-                        Console.Write("Note: ");
-                        string note = Console.ReadLine();
-                        manager.AppendToLogFile(note);
-                        break;
-                    case "7":
-                        manager.DeleteLogFile();
-                        break;
-                    case "8":
-                        running = false;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option.");
-                        break;
-                }
+                case "Add component":
+                    try { AddComponent(manager); }
+                    catch (PlantShutdownException ex) { Console.WriteLine(ex.Message); }
+                    break;
+                case "View all":
+                    manager.DisplayAllComponents();
+                    break;
+                case "Search ID":
+                    try { SearchComponent(manager); }
+                    catch (NotFoundException ex) { Console.WriteLine(ex.Message); }
+                    break;
+                case "Remove component":
+                    try { RemoveComponent(manager); }
+                    catch (PlantShutdownException ex) { Console.WriteLine(ex.Message); }
+                    catch (NotFoundException ex) { Console.WriteLine(ex.Message); }
+                    break;
+                case "Save file":
+                    manager.CreateLogFile();
+                    break;
+                case "Add note":
+                    string note = AnsiConsole.Ask<string>("Note:");
+                    manager.AppendToLogFile(note);
+                    break;
+                case "Delete file":
+                    manager.DeleteLogFile();
+                    break;
+                case "Exit":
+                    running = false;
+                    break;
             }
         }
 
-        // amocmebs momkhmareblis sheyvanil monacemebs temperatura, radiacia, wneva da amatebs komponents tu sadguri mushaobs.
         private static void AddComponent(PlantManager manager)
         {
             if (manager.IsPlantShutDown)

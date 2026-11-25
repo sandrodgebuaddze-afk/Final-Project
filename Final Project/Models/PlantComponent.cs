@@ -29,8 +29,6 @@ namespace Final_Project.Models
         {
             return $"ID: {Id} | Name: {Name} | Status: {Status}";
         }
-
-        // amowmebs aris tu ara komponenti usafrtxoa
         public abstract string GetSafetyProblem();
     }
 }

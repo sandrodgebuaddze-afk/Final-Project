@@ -73,6 +73,26 @@ namespace Final_Project.Models
 
             AnsiConsole.Write(table);
 
+            var reactors = _components.OfType<ReactorCore>().ToList();
+            if (reactors.Count > 0)
+            {
+                var chart = new BarChart()
+                    .Width(60)
+                    .Label("[bold underline]Reactor Power Output (Level 1-10)[/]")
+                    .CenterLabel();
+
+                foreach (var reactor in reactors)
+                {
+                    Color barColor = reactor.PowerLevel >= 8 ? Color.Red :
+                                     reactor.PowerLevel >= 5 ? Color.Yellow : Color.Green;
+
+                    chart.AddItem(reactor.Name, reactor.PowerLevel, barColor);
+                }
+
+                AnsiConsole.WriteLine();
+                AnsiConsole.Write(chart);
+            }
+
             if (Notes.Length > 0)
             {
                 AnsiConsole.MarkupLine("\n[bold]Notes:[/]");
@@ -82,6 +102,7 @@ namespace Final_Project.Models
                 }
             }
         }
+
 
 
         public PlantComponent SearchComponentById(string id)
