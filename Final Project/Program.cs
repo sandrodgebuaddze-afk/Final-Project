@@ -9,6 +9,11 @@ namespace Final_Project
         static void Main()
         {
             string usersPath = "users.txt";
+            AnsiConsole.Write(
+    new FigletText("NUCLEAR FISSION POWER PLANT")
+        .Centered()
+        .Color(Color.Green));
+
 
             List<User> defaultUsers = new List<User>()
             {
