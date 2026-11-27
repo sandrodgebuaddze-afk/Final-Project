@@ -1,4 +1,5 @@
-﻿using Final_Project.Enums;
+﻿using System.Text.Json;
+using Final_Project.Enums;
 using Final_Project.Exceptions;
 using Spectre.Console;
 
@@ -8,7 +9,7 @@ namespace Final_Project.Models
     {
         private List<PlantComponent> _components = new List<PlantComponent>();
 
-        private readonly string logPath = "log.txt";
+        private readonly string logPath = "log.json";
 
         public string[] Notes { get; set; } = Array.Empty<string>();
 
@@ -149,19 +150,24 @@ namespace Final_Project.Models
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(logPath, append: false))
+                var logReport = new
                 {
-                    writer.WriteLine($"Plant Log Report : {DateTime.Now}");
-                    writer.WriteLine($"Status: {(IsPlantShutDown ? "SHUT DOWN" : "OPERATIONAL")}");
-                    if (IsPlantShutDown)
+                    Timestamp = DateTime.Now,
+                    Status = IsPlantShutDown ? "SHUT DOWN" : "OPERATIONAL",
+                    ShutdownCause = IsPlantShutDown ? ShutdownReason : null,
+                    Components = _components.Select(c => new
                     {
-                        writer.WriteLine($"Shutdown Cause: {ShutdownReason}");
-                    }
-                    foreach (var comp in _components)
-                    {
-                        writer.WriteLine(comp.GetDetails());
-                    }
-                }
+                        c.Id,
+                        c.Name,
+                        Type = c.GetType().Name,
+                        Status = c.Status.ToString(),
+                        Details = c.GetDetails()
+                    }).ToList(),
+                    Notes = Notes.ToList()
+                };
+
+                string json = JsonSerializer.Serialize(logReport, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(logPath, json);
                 Console.WriteLine("Log file saved successfully.");
             }
             catch (Exception ex)
@@ -180,11 +186,26 @@ namespace Final_Project.Models
 
             try
             {
-                using (StreamWriter writer = new StreamWriter(logPath, append: true))
+                Notes = Notes.Append($"[{DateTime.Now}] Note: {note}").ToArray();
+
+                var logReport = new
                 {
-                    writer.WriteLine($"[{DateTime.Now}] Note: {note}");
-                }
-                Notes = Notes.Append(note).ToArray();
+                    Timestamp = DateTime.Now,
+                    Status = IsPlantShutDown ? "SHUT DOWN" : "OPERATIONAL",
+                    ShutdownCause = IsPlantShutDown ? ShutdownReason : null,
+                    Components = _components.Select(c => new
+                    {
+                        c.Id,
+                        c.Name,
+                        Type = c.GetType().Name,
+                        Status = c.Status.ToString(),
+                        Details = c.GetDetails()
+                    }).ToList(),
+                    Notes = Notes.ToList()
+                };
+
+                string json = JsonSerializer.Serialize(logReport, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(logPath, json);
                 Console.WriteLine("Note appended to log file.");
             }
             catch (Exception ex)
