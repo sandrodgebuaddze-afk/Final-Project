@@ -2,7 +2,6 @@
 {
     public class ReactorCore : PlantComponent
     {
-        // erti Random generatori yvela reaqtoristvis, shemtkhvevit ricxvebis sagenerirebelad
         private static Random _random = new Random();
 
         public double Temperature { get; set; }
@@ -18,7 +17,6 @@
             Temperature = temperature;
             PowerLevel = powerLevel;
 
-            // itvlis simdzlavris gamomushavebas MW donis mixedvit 1 dan 10 mde da amocmebs avariuli gamortvis scram shanss.
             int minPower = powerLevel * 100 - 50;
             int maxPower = powerLevel * 100;
 
