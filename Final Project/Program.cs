@@ -57,10 +57,10 @@ namespace Final_Project
                         else
                         {
                             Console.WriteLine("Wrong email or password.");
-                            Console.WriteLine("Try again? (yes/no)");
+                            Console.WriteLine("Try again? (y/n)");
                             string userAnswer = Console.ReadLine();
 
-                            if (string.Equals(userAnswer, "yes", StringComparison.OrdinalIgnoreCase))
+                            if (string.Equals(userAnswer, "y"))
                             {
                                 wantToContinue = true;
                             }
