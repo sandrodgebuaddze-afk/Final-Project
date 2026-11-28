@@ -1,7 +1,6 @@
 ﻿using Final_Project.Exceptions;
 using Final_Project.Models;
 using Spectre.Console;
-using System.Runtime.Intrinsics.X86;
 
 namespace Final_Project
 {
@@ -10,6 +9,7 @@ namespace Final_Project
         static void Main()
         {
             string usersPath = "users.txt";
+
             AnsiConsole.Write(
                 new FigletText("NUCLEAR FISSION POWER PLANT")
                     .Centered()
@@ -27,6 +27,7 @@ namespace Final_Project
             }
 
             List<User> users = LoadUsers(usersPath);
+
             User currentUser = null;
             bool wantToContinue = true;
 
@@ -155,13 +156,13 @@ namespace Final_Project
         private static void RegisterUser(string usersPath, List<User> users)
         {
             Console.Write("Full Name: ");
-            string fullName = Console.ReadLine()?.Trim();
+            string fullName = Console.ReadLine();
             Console.Write("Email: ");
-            string email = Console.ReadLine()?.Trim();
+            string email = Console.ReadLine();
             Console.Write("Password: ");
             string password = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 Console.WriteLine("All fields are required.");
                 return;
@@ -179,7 +180,12 @@ namespace Final_Project
                 return;
             }
 
-            int nextId = users.Count > 0 ? users.Max(u => u.Id) + 1 : 1;
+            int nextId = 1;
+            if (users.Count > 0)
+            {
+                nextId = users.Max(u => u.Id) + 1;
+            }
+
             User newUser = new User(nextId, fullName, email, password);
             users.Add(newUser);
             SaveUsers(usersPath, users);
@@ -190,7 +196,7 @@ namespace Final_Project
         private static void RenewPassword(string usersPath, List<User> users)
         {
             Console.Write("Enter your Email: ");
-            string email = Console.ReadLine()?.Trim();
+            string email = Console.ReadLine();
             Console.Write("Enter current Password: ");
             string currentPassword = Console.ReadLine();
 
@@ -205,7 +211,7 @@ namespace Final_Project
             Console.Write("Enter new Password: ");
             string newPassword = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8)
+            if (string.IsNullOrEmpty(newPassword) || newPassword.Length < 8)
             {
                 Console.WriteLine("New password must be at least 8 characters long.");
                 return;
@@ -271,7 +277,7 @@ namespace Final_Project
                 Console.Write("Temperature (Safe limit: max 350.0 C): ");
                 if (double.TryParse(Console.ReadLine(), out double temp) && temp >= 0)
                 {
-                 Console.Write("Power level 1-10: ");
+                    Console.Write("Power level 1-10: ");
                     if (int.TryParse(Console.ReadLine(), out int level) && level >= 1 && level <= 10)
                     {
                         manager.AddComponent(new ReactorCore(name, temp, level));
@@ -315,6 +321,7 @@ namespace Final_Project
                 Console.WriteLine("Invalid type choice.");
             }
         }
+
         private static void SearchComponent(PlantManager manager)
         {
             Console.Write("Component ID (in order of creation, starting from COMP-1): ");
@@ -322,6 +329,7 @@ namespace Final_Project
             PlantComponent item = manager.SearchComponentById(id);
             Console.WriteLine(item.GetDetails());
         }
+
         private static void RemoveComponent(PlantManager manager)
         {
             Console.Write("Component ID to remove (in order of creation, starting from COMP-1): ");
