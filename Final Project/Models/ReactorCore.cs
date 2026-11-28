@@ -24,7 +24,7 @@
 
             PowerOutput = Math.Round(minPower + _random.NextDouble() * (maxPower - minPower), 1);
 
-            ScramChance = powerLevel * 9;
+            ScramChance = powerLevel * 5;
 
             Scrammed = _random.Next(1, 101) <= ScramChance;
         }
